@@ -9,7 +9,7 @@ clone_folder: c:\SLBuild\throb
 init:
 - cmd: >-
     cd c:\SLBuild\
-    cd Throb
+    cd throb
 
 build_script:
 - cmd: >-
