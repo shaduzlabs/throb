@@ -1,5 +1,6 @@
 language: cpp
 sudo: false
+
 matrix:
   include:
   - os: osx
@@ -11,6 +12,7 @@ matrix:
     compiler: clang
     env: CXX_COMPILER='clang++' C_COMPILER='clang' Fortran_COMPILER='gfortran' BUILD_TYPE='Release'
       THROB_DEPLOY_TARGET="throb-osx"
+
 install:
 - DEPS_DIR="${TRAVIS_BUILD_DIR}/deps"
 - mkdir ${DEPS_DIR} && cd ${DEPS_DIR}
@@ -27,11 +29,13 @@ install:
     brew install cmake
     CMAKE_EXECUTABLE=cmake
   fi
+
 before_script:
 - export CXX=${CXX_COMPILER}
 - export CC=${C_COMPILER}
 - export FC=${Fortran_COMPILER}
 - export PATH=$HOME/.local/bin:/usr/local/bin:/usr/bin:$PATH
+
 script:
 - cd ${TRAVIS_BUILD_DIR}
 - mkdir build
@@ -40,6 +44,7 @@ script:
   Xcode .. -DCMAKE_BUILD_TYPE=${BUILD_TYPE} -DCMAKE_OSX_ARCHITECTURES="i386;x86_64"
 - cd ..
 - cmake --build build --config $BUILD_TYPE
+
 after_success:
 - |
   if [ -n "${THROB_DEPLOY_TARGET+set}" ]; then
@@ -54,6 +59,7 @@ after_success:
     mv $THROB_DEPLOY_TARGET.zip deploy
     cd ..
   fi
+
 deploy:
   provider: bintray
   file: ./build/deploy-bintray.json
