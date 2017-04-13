@@ -1,0 +1,73 @@
+version: configuring.{build}
+configuration:
+- Debug
+- Release
+platform:
+- Win32
+- x64
+clone_folder: c:\SLBuild\throb
+init:
+- cmd: >-
+    cd c:\SLBuild\
+    cd Throb
+
+build_script:
+- cmd: >-
+    echo Running cmake...
+
+    echo Building %CONFIGURATION% - %PLATFORM%
+
+    c:
+
+    cd c:\SLBuild\throb
+
+    mkdir build-%PLATFORM%
+
+    pushd build-%PLATFORM%
+
+    if %PLATFORM% == x64 (set GENERATOR="Visual Studio 14 2015 Win64") else (set GENERATOR="Visual Studio 14 2015")
+
+    cmake -G %GENERATOR% -DCMAKE_BUILD_TYPE=%CONFIGURATION% ..
+
+    cd ..
+
+    cmake --build build-%PLATFORM% --config %CONFIGURATION%
+
+    mkdir artifacts-%CONFIGURATION%
+
+    cd build-%PLATFORM%\%CONFIGURATION%\
+
+    7z a -tzip throb-win.zip -r *
+
+    move /y *.zip ..\..\artifacts-%CONFIGURATION%
+
+    cd ..\..\
+
+after_build:
+- cmd: >-
+    cd c:\SLBuild\throb\artifacts-%CONFIGURATION%
+
+    if %PLATFORM% == x64 (echo Preparing to deploy throb-win-64_%APPVEYOR_BUILD_VERSION%.zip) else (echo Preparing to deploy throb-win-32_%APPVEYOR_BUILD_VERSION%.zip)
+
+    if %PLATFORM% == x64 (ren throb-win.zip throb-win-64_%APPVEYOR_BUILD_VERSION%.zip) else (ren throb-win.zip throb-win-32_%APPVEYOR_BUILD_VERSION%.zip)
+
+    cd ..
+
+artifacts:
+- path: artifacts-Release/throb-win-32.zip
+  name: throb (32bit)
+- path: artifacts-Release/throb-win-64.zip
+  name: throb (64bit)
+deploy:
+- provider: Environment
+  name: throb-win-64
+  on:
+    branch: master
+    CONFIGURATION: Release
+    PLATFORM: x64
+- provider: Environment
+  name: throb-win-32
+  on:
+    branch: master
+    CONFIGURATION: Release
+    PLATFORM: Win32
