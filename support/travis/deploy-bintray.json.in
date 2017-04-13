@@ -1,0 +1,30 @@
+{
+    "package": {
+        "name": "@THROB_DEPLOY_TARGET@",
+        "repo": "throb",
+        "subject": "shaduzlabs",
+        "desc": "VST/AU clock and reset generator",
+        "website_url": "https://github.com/shaduzlabs/throb",
+        "issue_tracker_url": "https://github.com/shaduzlabs/throb/issues",
+        "vcs_url": "https://github.com/shaduzlabs/cabl.git",
+        "github_use_tag_release_notes": false,
+        "licenses": ["MIT"],
+        "labels": ["VST", "AU", "AudioUnit", "Eurorack", "Plugin", "Clock"],
+        "public_download_numbers": false,
+        "public_stats": false
+    },
+
+    "version": {
+        "name": "@THROB_VERSION_STRING@",
+        "desc": "@THROB_BUILD_DESCRIPTION@",
+        "released": "@THROB_BUILD_DATE@",
+        "vcs_tag": "@THROB_VERSION_STRING@",
+        "gpgSign": false
+    },
+
+    "files":
+        [
+        {"includePattern": "build/deploy/(.*)([.]zip)", "uploadPattern": "$1_@THROB_VERSION_STRING@$2"}
+        ],
+    "publish": true
+}

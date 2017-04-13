@@ -1,0 +1,10 @@
+/*
+        ##########    Copyright (C) 2017 Vincenzo Pacella
+        ##      ##    Distributed under MIT license, see file LICENSE
+        ##      ##    or <http://opensource.org/licenses/MIT>
+        ##      ##
+##########      ############################################################# shaduzlabs.com #####*/
+
+#define THROB_VERSION_MAJOR @THROB_VERSION_MAJOR@
+#define THROB_VERSION_MINOR @THROB_VERSION_MINOR@
+#define THROB_VERSION_MICRO @THROB_VERSION_MICRO@
