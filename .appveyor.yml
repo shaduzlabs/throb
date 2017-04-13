@@ -9,7 +9,7 @@ clone_folder: c:\SLBuild\throb
 init:
 - cmd: >-
     cd c:\SLBuild\
-    
+
     cd throb
 
 build_script:
@@ -22,6 +22,8 @@ build_script:
 
     cd c:\SLBuild\throb
 
+    git submodule update --init --recursive
+    
     mkdir build-%PLATFORM%
 
     pushd build-%PLATFORM%
