@@ -66,6 +66,6 @@ deploy:
   user: shaduzlabs
   on:
     branch: master
-    condition: -n "${CABL_DEPLOY_TARGET+set}"
+    condition: -n "${THROB_DEPLOY_TARGET+set}"
   key:
     secure: sF28eSA6AA1InXm8FLqgoS9MyvmaveIWILxsKUHQjqC873kbAxuSp2i5//7gReklr535F0J0d5rc0gPs3sOKPQihlT4bWAprJGyJvEfEe+0FK7wgBExMzon0H2RvUu0AWJbawwCiDFL7Roa5y0zu7s4nKj99OMNtxf4llPnsCz1XhjhpHnVEVB6oVjuW2l2wM0jr5+ndPjjVcHRWve6bF/rIqNEwjqNf8070gVL0NK66kNcgdy+hF4/R/BXp5aIS3wr6L6pvCl+g9Rd4nL/omTQ8il7WP0NyERjhVqYZyr7/ffi4GUEAo/am4MYAus1JzbHCKjraJaR7afG3NookZLaWOOBjFWENhwsymIoeb7Xk+clj5lcJBJWtU0y30N13u89TIcnaZm9Xn3Ie5wkY+TstOX569RAgtWzkguj1HlAu4HF856Vq9DwqcUqokBs9Gprx2ojZUTnlloBtQ0tCM3oD5ziqBjfYtzlf260eAYQJ8kMBPNXtZkUd+YfJ2yqakdmXpFtH0dXtaWzj+w1ovQvDywYIcjeBRz400asbKpNELLzD10XLeu/s12u0FZ9kP9fYHj8dyn9MFk0sx0uccIWGk1dYRFYPf55cCCHtuvyQb7fIwdeoRiF6kKUIxv6dgc+kN0AsLRbm5l91ThqPXbuUofOnKGmc+vShh7C1Et4=
