@@ -1,6 +1,5 @@
 language: cpp
 sudo: false
-
 matrix:
   include:
   - os: osx
@@ -12,7 +11,6 @@ matrix:
     compiler: clang
     env: CXX_COMPILER='clang++' C_COMPILER='clang' Fortran_COMPILER='gfortran' BUILD_TYPE='Release'
       THROB_DEPLOY_TARGET="throb-osx"
-
 install:
 - DEPS_DIR="${TRAVIS_BUILD_DIR}/deps"
 - mkdir ${DEPS_DIR} && cd ${DEPS_DIR}
@@ -29,22 +27,19 @@ install:
     brew install cmake
     CMAKE_EXECUTABLE=cmake
   fi
-
 before_script:
 - export CXX=${CXX_COMPILER}
 - export CC=${C_COMPILER}
 - export FC=${Fortran_COMPILER}
 - export PATH=$HOME/.local/bin:/usr/local/bin:/usr/bin:$PATH
-
 script:
 - cd ${TRAVIS_BUILD_DIR}
 - mkdir build
 - cd build
-- CXX=${CXX_COMPILER} CC=${C_COMPILER} FC=${Fortran_COMPILER} $CMAKE_EXECUTABLE -G Xcode ..
-  -DCMAKE_BUILD_TYPE=${BUILD_TYPE} -DCMAKE_OSX_ARCHITECTURES="i386;x86_64"
+- CXX=${CXX_COMPILER} CC=${C_COMPILER} FC=${Fortran_COMPILER} $CMAKE_EXECUTABLE -G
+  Xcode .. -DCMAKE_BUILD_TYPE=${BUILD_TYPE} -DCMAKE_OSX_ARCHITECTURES="i386;x86_64"
 - cd ..
 - cmake --build build --config $BUILD_TYPE
-
 after_success:
 - |
   if [ -n "${THROB_DEPLOY_TARGET+set}" ]; then
@@ -59,13 +54,12 @@ after_success:
     mv $THROB_DEPLOY_TARGET.zip deploy
     cd ..
   fi
-
 deploy:
   provider: bintray
-  file: "./build/deploy-bintray.json"
+  file: ./build/deploy-bintray.json
   user: shaduzlabs
   on:
     branch: master
     condition: -n "${CABL_DEPLOY_TARGET+set}"
   key:
-    secure: LeIydY2ok9l1YUdcWXhZK4H99oDfBtVyeBQgpokE47VN1ogwSi4eBjjnEqpon7uFw8meRUR4Po1gefl6g3mJn/UCdk9qWIQ07WLUx8bY/QFl8QMCdsh13DJ7c3NdHYcOKbQdju0s4ByIULJsd/jtzqKjZ8tuoEvtIV7GkMz7heLyZOOUMAs/mKvmaQCeYLNqXp9I7vIDSkC5OJESDhD+hYbFGbXsAIK7QNjgzRxpV5tclcAxrhjtgsQRRhE1eJelD2tlrR2EKpN+/Dnk9vpbSFuSWSkckjW9fTghr1nqgkGQwy0CQN4UF8zi8+DOfROpwj9Mjl8ZNgj6GkNrOhvs5tXulqToDBXP15r0czrusRUUZWiBOfmZcgYJYetdpA+MqSG8rbPpy3k5XFvTJshuE+ungTUOmXY3ZyZLuqxOlf0FvKrdGesv3EHKVs9t+mgtpizfb5RdO0YD11UITZVVpqqmtCZ1k4eIYryfLJq1rU7yLdKfZtvKsoJydjSzbkWULCg4TbT5wCsVq+0drf48LQxhwkLNbPvK7xjOLnTqZmZ/wBSug71VwKyFC8BzrF5UlQLiXdMN0b/j3A6pXcfYnHvZeRhFMcVJncgrYvDY44rZ1J7QFUJvqyWbrU6nNLCY3ZDNLyen8vSmIaV4FRadTlYWssrvnluwJ0bvLlPtHrM=
+    secure: sF28eSA6AA1InXm8FLqgoS9MyvmaveIWILxsKUHQjqC873kbAxuSp2i5//7gReklr535F0J0d5rc0gPs3sOKPQihlT4bWAprJGyJvEfEe+0FK7wgBExMzon0H2RvUu0AWJbawwCiDFL7Roa5y0zu7s4nKj99OMNtxf4llPnsCz1XhjhpHnVEVB6oVjuW2l2wM0jr5+ndPjjVcHRWve6bF/rIqNEwjqNf8070gVL0NK66kNcgdy+hF4/R/BXp5aIS3wr6L6pvCl+g9Rd4nL/omTQ8il7WP0NyERjhVqYZyr7/ffi4GUEAo/am4MYAus1JzbHCKjraJaR7afG3NookZLaWOOBjFWENhwsymIoeb7Xk+clj5lcJBJWtU0y30N13u89TIcnaZm9Xn3Ie5wkY+TstOX569RAgtWzkguj1HlAu4HF856Vq9DwqcUqokBs9Gprx2ojZUTnlloBtQ0tCM3oD5ziqBjfYtzlf260eAYQJ8kMBPNXtZkUd+YfJ2yqakdmXpFtH0dXtaWzj+w1ovQvDywYIcjeBRz400asbKpNELLzD10XLeu/s12u0FZ9kP9fYHj8dyn9MFk0sx0uccIWGk1dYRFYPf55cCCHtuvyQb7fIwdeoRiF6kKUIxv6dgc+kN0AsLRbm5l91ThqPXbuUofOnKGmc+vShh7C1Et4=
