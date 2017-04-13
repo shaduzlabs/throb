@@ -9,9 +9,14 @@ The multiplier is an automation parameter and therefore can be controlled using 
 
 ## Download ##
 
-You can download the latest build from [BinTray][7aae2e00].
+You can download the latest build from BinTray:
+- OS X: [ ![Download](https://api.bintray.com/packages/shaduzlabs/throb/throb-osx/images/download.svg) ](https://bintray.com/shaduzlabs/throb/throb-osx/_latestVersion)
+- Windows 32bit: [ ![Download](https://api.bintray.com/packages/shaduzlabs/throb/throb-win-32/images/download.svg) ](https://bintray.com/shaduzlabs/throb/throb-win-32/_latestVersion)
+- Windows 64 bit: [ ![Download](https://api.bintray.com/packages/shaduzlabs/throb/throb-win-64/images/download.svg) ](https://bintray.com/shaduzlabs/throb/throb-win-64/_latestVersion)
+
+## Install ##
 - To install on Windows: copy the **dll files** to you VST plugins folder
-- To install on OS X: 
+- To install on OS X:
   - copy **throb.components** to `/Library/Audio/Plug-Ins/Components/`
   - copy **throb.vst** to `/Library/Audio/Plug-Ins/VST/`
   - copy **throb.vst3** to `/Library/Audio/Plug-Ins/VST3/`
