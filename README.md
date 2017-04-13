@@ -5,6 +5,8 @@
 Throb is a free [JUCE][0e888cf7] based plugin that generates clock/reset signals synchronised with the host tempo. It is currently available for **Windows** (VST2 and VST3, 32/64 bit) and **OS X** (VST2, VST3 and AU 32/64 bit).
 The multiplier is an automation parameter and therefore can be controlled using the respective host functionality. Both the multiplier and the resolution (ppqn) settings are serialized to the preset chunk.
 
+**WARNING**: do not send the output of this plugin to your speakers or headphones!
+
 ![The plugin UI](support/images/screenshot.png)
 
 ## Download ##
