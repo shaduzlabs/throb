@@ -23,7 +23,7 @@ build_script:
     cd c:\SLBuild\throb
 
     git submodule update --init --recursive
-    
+
     mkdir build-%PLATFORM%
 
     pushd build-%PLATFORM%
@@ -57,9 +57,9 @@ after_build:
     cd ..
 
 artifacts:
-- path: artifacts-Release/throb-win-32.zip
+- path: artifacts-Release/throb-win-32_*.zip
   name: throb (32bit)
-- path: artifacts-Release/throb-win-64.zip
+- path: artifacts-Release/throb-win-64_*.zip
   name: throb (64bit)
 deploy:
 - provider: Environment
