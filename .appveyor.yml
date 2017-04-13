@@ -40,7 +40,7 @@ build_script:
 
     cd build-%PLATFORM%\%CONFIGURATION%\
 
-    7z a -tzip throb-win.zip -r *
+    7z a -tzip throb-win.zip -r *.dll
 
     move /y *.zip ..\..\artifacts-%CONFIGURATION%
 
