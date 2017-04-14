@@ -1,5 +1,4 @@
 # throb #
---------------------
 [![Build Status](https://travis-ci.org/shaduzlabs/throb.svg?branch=master)](https://travis-ci.org/shaduzlabs/throb) [![Build status](https://ci.appveyor.com/api/projects/status/mql8qsvowjflh3ei?svg=true)](https://ci.appveyor.com/project/shaduzlabs/throb)
 
 Throb is a free [JUCE][0e888cf7] based plugin that generates clock/reset signals synchronised with the host tempo. It is currently available for **Windows** (VST2 and VST3, 32/64 bit) and **OS X** (VST2, VST3 and AU 32/64 bit).
