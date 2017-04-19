@@ -8,15 +8,15 @@
 set(SUBMODULES_DIR ${CMAKE_SOURCE_DIR}/modules)
 set(JUCE_LIBRARY_CODE_DIR ${CMAKE_SOURCE_DIR}/support/JuceLibraryCode/)
 
-# ----------------------------------------------------------------------------------------------------------------------
+# --------------------------------------------------------------------------------------------------
 
-function( addJUCE target )
+function( addJUCE target_ )
 
   if(APPLE)
     find_package( OpenGL REQUIRED )
   endif()
 
-  target_compile_definitions( ${target} PRIVATE
+  target_compile_definitions( ${CURRENT_TARGET} PRIVATE
     JUCE_SHARED_CODE=1
     JucePlugin_Build_VST=0
     JucePlugin_Build_VST3=0
@@ -63,13 +63,20 @@ function( addJUCE target )
     ${JUCE_LIBRARY_CODE_DIR}/juce_audio_plugin_client_Standalone.cpp
   )
 
-  target_sources( ${target} PRIVATE ${juce_library} )
-  target_sources( ${target} PRIVATE ${juce_library_audio} )
-  target_sources( ${target} PRIVATE ${juce_library_audio_plugin_client} )
+  target_sources( ${CURRENT_TARGET} PRIVATE ${juce_library} )
+  target_sources( ${CURRENT_TARGET} PRIVATE ${juce_library_audio} )
+  target_sources( ${CURRENT_TARGET} PRIVATE ${juce_library_audio_plugin_client} )
 
-  target_include_directories( ${target} PUBLIC ${JUCE_LIBRARY_CODE_DIR} ${CMAKE_SOURCE_DIR}/modules/JUCE/modules )
+  source_group( "JUCE" FILES ${juce_library} )
+  source_group( "JUCE\\audio" FILES ${juce_library_audio} )
+  source_group( "JUCE\\audio" FILES ${juce_library_audio_plugin_client} )
 
-  set_target_properties(${target} PROPERTIES
+  target_include_directories( ${CURRENT_TARGET} PUBLIC
+    ${JUCE_LIBRARY_CODE_DIR}
+    ${CMAKE_SOURCE_DIR}/modules/JUCE/modules
+  )
+
+  set_target_properties(${CURRENT_TARGET} PROPERTIES
     COMPILE_DEFINITIONS         NDEBUG
     COMPILE_DEFINITIONS_DEBUG   DEBUG
     COMPILE_DEFINITIONS_RELEASE NDEBUG
@@ -77,9 +84,11 @@ function( addJUCE target )
 
   if( APPLE )
 
-    set_target_properties( ${target} PROPERTIES COMPILE_FLAGS "${COMPILE_FLAGS} -x objective-c++" )
-    target_link_libraries( ${target} PRIVATE ${OPENGL_gl_LIBRARY} )
-    target_link_libraries( ${target} PUBLIC
+    set_target_properties( ${CURRENT_TARGET} PROPERTIES
+      COMPILE_FLAGS "${COMPILE_FLAGS} -x objective-c++"
+    )
+    target_link_libraries( ${CURRENT_TARGET} PRIVATE ${OPENGL_gl_LIBRARY} )
+    target_link_libraries( ${CURRENT_TARGET} PUBLIC
       "-framework AudioUnit"
       "-framework AudioToolbox"
       "-framework Carbon"
@@ -97,7 +106,7 @@ function( addJUCE target )
 
   elseif(WIN32)
 
-    target_link_libraries(${target} PUBLIC
+    target_link_libraries(${CURRENT_TARGET} PUBLIC
       advapi32.lib
       comdlg32.lib
       gdi32.lib
@@ -118,51 +127,61 @@ function( addJUCE target )
 
 endfunction(addJUCE)
 
-# ----------------------------------------------------------------------------------------------------------------------
+# --------------------------------------------------------------------------------------------------
 
-function( addJUCE_VST name target )
-  addJUCE(${target})
+function( addJUCE_VST name_ sources_ )
 
-  target_compile_definitions( ${target} PRIVATE JucePlugin_Build_VST=1 )
+  set( CURRENT_TARGET "${name_}VST" )
+
+  add_library( ${CURRENT_TARGET} MODULE ${sources_} )
+  addJUCE( ${CURRENT_TARGET} )
+
+  target_compile_definitions( ${CURRENT_TARGET} PRIVATE JucePlugin_Build_VST=1 )
 
   set(juce_library_audio_plugin_client_vst
     ${JUCE_LIBRARY_CODE_DIR}/juce_audio_plugin_client_VST2.cpp
   )
 
-  target_include_directories( ${target} PUBLIC ${VST_INCLUDE_PATH} )
-  target_sources(${target} PRIVATE ${juce_library_audio_plugin_client_vst})
+  source_group( "JUCE\\audio\\vst" FILES ${juce_library_audio_plugin_client_vst} )
+
+  target_include_directories( ${CURRENT_TARGET} PUBLIC ${VST_INCLUDE_PATH} )
+  target_sources(${CURRENT_TARGET} PRIVATE ${juce_library_audio_plugin_client_vst})
 
   if(APPLE)
     configure_file (
-      "${THROB_ROOT_DIR}/support/osx/Info-VSTx.plist.in"
-      "${THROB_BUILD_DIR}/plists/Info-VST.plist"
+      "${PROJECT_ROOT_DIR}/support/osx/Info-VSTx.plist.in"
+      "${PROJECT_BINARY_DIR}/plists/Info-VST.plist"
     )
     set(juce_library_audio_plugin_client_vst_osx
       ${JUCE_LIBRARY_CODE_DIR}/juce_audio_plugin_client_VST_utils.mm
     )
-    target_sources(${target} PRIVATE ${juce_library_audio_plugin_client_vst_osx})
+    target_sources(${CURRENT_TARGET} PRIVATE ${juce_library_audio_plugin_client_vst_osx})
   endif()
 
-  set_target_properties(${target} PROPERTIES
+  set_target_properties(${CURRENT_TARGET} PROPERTIES
     BUNDLE true
-    OUTPUT_NAME ${name}
+    OUTPUT_NAME ${name_}
     BUNDLE_EXTENSION "vst"
     XCODE_ATTRIBUTE_WRAPPER_EXTENSION "vst"
-    MACOSX_BUNDLE_INFO_PLIST "${THROB_BUILD_DIR}/plists/Info-VST.plist"
+    MACOSX_BUNDLE_INFO_PLIST "${PROJECT_BINARY_DIR}/plists/Info-VST.plist"
   )
 
   if(APPLE)
-    install( TARGETS ${target} DESTINATION "$ENV{HOME}/Library/Audio/Plug-Ins/VST" )
+    install( TARGETS ${CURRENT_TARGET} DESTINATION "$ENV{HOME}/Library/Audio/Plug-Ins/VST" )
   endif()
 
 endfunction( addJUCE_VST )
 
-# ----------------------------------------------------------------------------------------------------------------------
+# --------------------------------------------------------------------------------------------------
 
-function( addJUCE_VST3 name target )
-  addJUCE(${target})
+function( addJUCE_VST3 name_ sources_ )
 
-  target_compile_definitions( ${target} PRIVATE JucePlugin_Build_VST3=1 )
+  set( CURRENT_TARGET "${name_}VST3" )
+
+  add_library ( ${CURRENT_TARGET} MODULE ${sources_} )
+  addJUCE(${CURRENT_TARGET})
+
+  target_compile_definitions( ${CURRENT_TARGET} PRIVATE JucePlugin_Build_VST3=1 )
 
   set(juce_library_audio_plugin_client_vst
     ${JUCE_LIBRARY_CODE_DIR}/juce_audio_plugin_client_VST2.cpp
@@ -172,64 +191,89 @@ function( addJUCE_VST3 name target )
     ${JUCE_LIBRARY_CODE_DIR}/juce_audio_plugin_client_VST3.cpp
   )
 
-  target_include_directories( ${target} PUBLIC ${VST_INCLUDE_PATH} )
-  target_sources(${target} PRIVATE ${juce_library_audio_plugin_client_vst})
-  target_sources(${target} PRIVATE ${juce_library_audio_plugin_client_vst3})
+  source_group( "JUCE\\audio\\vst" FILES ${juce_library_audio_plugin_client_vst} )
+  source_group( "JUCE\\audio\\vst3" FILES ${juce_library_audio_plugin_client_vst3} )
+
+  target_include_directories( ${CURRENT_TARGET} PUBLIC ${VST_INCLUDE_PATH} )
+  target_sources(${CURRENT_TARGET} PRIVATE ${juce_library_audio_plugin_client_vst})
+  target_sources(${CURRENT_TARGET} PRIVATE ${juce_library_audio_plugin_client_vst3})
   if(APPLE)
     configure_file (
-      "${THROB_ROOT_DIR}/support/osx/Info-VSTx.plist.in"
-      "${THROB_BUILD_DIR}/plists/Info-VST3.plist"
+      "${PROJECT_ROOT_DIR}/support/osx/Info-VSTx.plist.in"
+      "${PROJECT_BINARY_DIR}/plists/Info-VST3.plist"
     )
     set(juce_library_audio_plugin_client_vst_osx
       ${JUCE_LIBRARY_CODE_DIR}/juce_audio_plugin_client_VST_utils.mm
     )
-    target_sources(${target} PRIVATE ${juce_library_audio_plugin_client_vst_osx})
+    source_group( "JUCE\\audio\\vst\\osx" FILES ${juce_library_audio_plugin_client_vst_osx} )
+
+    target_sources(${CURRENT_TARGET} PRIVATE ${juce_library_audio_plugin_client_vst_osx})
   endif()
 
-  set_target_properties(${target} PROPERTIES
+  set( PLUGIN_OUTPUT_NAME ${name_} )
+  if( WIN32 )
+    set( PLUGIN_OUTPUT_NAME ${name_}-vst3 )
+  endif()
+
+  set_target_properties(${CURRENT_TARGET} PROPERTIES
     BUNDLE true
-    OUTPUT_NAME ${name}
+    OUTPUT_NAME ${PLUGIN_OUTPUT_NAME}
     BUNDLE_EXTENSION "vst3"
     XCODE_ATTRIBUTE_WRAPPER_EXTENSION "vst3"
-    MACOSX_BUNDLE_INFO_PLIST "${THROB_BUILD_DIR}/plists/Info-VST3.plist"
+    MACOSX_BUNDLE_INFO_PLIST "${PROJECT_BINARY_DIR}/plists/Info-VST3.plist"
   )
 
   if(APPLE)
-    install( TARGETS ${target} DESTINATION "$ENV{HOME}/Library/Audio/Plug-Ins/VST3" )
+    install( TARGETS ${CURRENT_TARGET} DESTINATION "$ENV{HOME}/Library/Audio/Plug-Ins/VST3" )
   endif()
 
 endfunction( addJUCE_VST3 )
 
-# ----------------------------------------------------------------------------------------------------------------------
+# --------------------------------------------------------------------------------------------------
 
-function( addJUCE_AU name target )
+function( addJUCE_AU name_ sources_)
   if(APPLE)
-    addJUCE(${target})
+
+    set( CURRENT_TARGET "${name_}AU" )
+    add_library ( ${CURRENT_TARGET} MODULE ${sources_} )
+    addJUCE( ${CURRENT_TARGET} )
 
     configure_file (
-      "${THROB_ROOT_DIR}/support/osx/Info-AU.plist.in"
-      "${THROB_BUILD_DIR}/plists/Info-AU.plist"
+      "${PROJECT_ROOT_DIR}/support/osx/Info-AU.plist.in"
+      "${PROJECT_BINARY_DIR}/plists/Info-AU.plist"
     )
 
-    target_compile_definitions( ${target} PRIVATE JucePlugin_Build_AU=1 )
+    target_compile_definitions( ${CURRENT_TARGET} PRIVATE JucePlugin_Build_AU=1 )
 
     set(juce_library_audio_plugin_client_au
       ${JUCE_LIBRARY_CODE_DIR}/juce_audio_plugin_client_AU_1.mm
       ${JUCE_LIBRARY_CODE_DIR}/juce_audio_plugin_client_AU_2.mm
     )
+    source_group( "JUCE\\audio\\au" FILES ${juce_library_audio_plugin_client_au} )
 
-    target_sources(${target} PRIVATE ${juce_library_audio_plugin_client_au})
+    target_sources( ${CURRENT_TARGET} PRIVATE ${juce_library_audio_plugin_client_au} )
 
-    set_target_properties( ${target} PROPERTIES
+    set_target_properties( ${CURRENT_TARGET} PROPERTIES
       BUNDLE true
-      OUTPUT_NAME ${name}
+      OUTPUT_NAME ${name_}
       BUNDLE_EXTENSION "component"
       XCODE_ATTRIBUTE_WRAPPER_EXTENSION "component"
-      MACOSX_BUNDLE_INFO_PLIST "${THROB_BUILD_DIR}/plists/Info-AU.plist"
+      MACOSX_BUNDLE_INFO_PLIST "${PROJECT_BINARY_DIR}/plists/Info-AU.plist"
     )
 
-    install( TARGETS ${target} DESTINATION "$ENV{HOME}/Library/Audio/Plug-Ins/Components" )
+    install( TARGETS ${CURRENT_TARGET} DESTINATION "$ENV{HOME}/Library/Audio/Plug-Ins/Components" )
   endif()
 endfunction(addJUCE_AU)
 
-# ----------------------------------------------------------------------------------------------------------------------
+# --------------------------------------------------------------------------------------------------
+
+function( addJUCEPlugins name_ sources_ )
+
+  if( APPLE )
+    addJUCE_AU( ${name_} "${sources_}" )
+  endif( APPLE )
+
+  addJUCE_VST( ${name_} "${sources_}" )
+  addJUCE_VST3( ${name_} "${sources_}" )
+
+endfunction( addJUCEPlugins )
