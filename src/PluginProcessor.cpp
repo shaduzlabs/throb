@@ -115,7 +115,7 @@ bool ThrobAudioProcessor::setPreferredBusArrangement(
 
 //--------------------------------------------------------------------------------------------------
 
-void ThrobAudioProcessor::processBlock(AudioSampleBuffer& buffer, MidiBuffer& midiMessages)
+void ThrobAudioProcessor::processBlock(AudioSampleBuffer& buffer_, MidiBuffer& /*mm_*/)
 {
   using namespace std::chrono;
   AudioPlayHead::CurrentPositionInfo result;
@@ -177,8 +177,11 @@ void ThrobAudioProcessor::processBlock(AudioSampleBuffer& buffer, MidiBuffer& mi
       resetAmplitude = 1.0;
     }
 
-    buffer.getWritePointer(0)[i] = clockAmplitude;
-    buffer.getWritePointer(1)[i] = resetAmplitude;
+    buffer_.getWritePointer(0)[i] = clockAmplitude;
+    if(buffer_.getNumChannels() > 1)
+    {
+      buffer_.getWritePointer(1)[i] = resetAmplitude;
+    }
   }
 }
 
