@@ -50,27 +50,27 @@ after_build:
 - cmd: >-
     cd c:\SLBuild\throb\artifacts-%CONFIGURATION%
 
-    if %PLATFORM% == x64 (echo Preparing to deploy throb-win-64_%APPVEYOR_BUILD_VERSION%.zip) else (echo Preparing to deploy throb-win-32_%APPVEYOR_BUILD_VERSION%.zip)
+    if %PLATFORM% == x64 (echo Preparing to deploy win-64.zip) else (echo Preparing to deploy win-32.zip)
 
-    if %PLATFORM% == x64 (ren throb-win.zip throb-win-64_%APPVEYOR_BUILD_VERSION%.zip) else (ren throb-win.zip throb-win-32_%APPVEYOR_BUILD_VERSION%.zip)
+    if %PLATFORM% == x64 (ren win.zip win-64.zip) else (ren win.zip win-32.zip)
 
     cd ..
 
 artifacts:
-- path: artifacts-Release/throb-win-32_*.zip
-  name: throb (32bit)
-- path: artifacts-Release/throb-win-64_*.zip
-  name: throb (64bit)
+- path: artifacts-Release/win-32.zip
+  name: binary (32bit)
+- path: artifacts-Release/win-64.zip
+  name: binary (64bit)
+
 deploy:
-- provider: Environment
-  name: throb-win-64
+  provider: GitHub
+  auth_token:
+    secure: YdSaqN8QORm4y2pBT0D40ltSZ+2iL9A0bTh3s3JbqgH5scJKqPhpdrUDFdp6TNkW
+  artifact: /win-.*\.zip/
+  force_update: true
+  draft: false
+  prerelease: false
   on:
+    appveyor_repo_tag: true
     branch: master
     CONFIGURATION: Release
-    PLATFORM: x64
-- provider: Environment
-  name: throb-win-32
-  on:
-    branch: master
-    CONFIGURATION: Release
-    PLATFORM: Win32
