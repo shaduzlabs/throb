@@ -10,10 +10,7 @@ The multiplier is an automation parameter and therefore can be controlled using 
 
 ## Download ##
 
-You can download the latest build from BinTray:
-- OS X: [ ![Download](https://api.bintray.com/packages/shaduzlabs/throb/throb-osx/images/download.svg) ](https://bintray.com/shaduzlabs/throb/throb-osx/_latestVersion)
-- Windows 32bit: [ ![Download](https://api.bintray.com/packages/shaduzlabs/throb/throb-win-32/images/download.svg) ](https://bintray.com/shaduzlabs/throb/throb-win-32/_latestVersion)
-- Windows 64 bit: [ ![Download](https://api.bintray.com/packages/shaduzlabs/throb/throb-win-64/images/download.svg) ](https://bintray.com/shaduzlabs/throb/throb-win-64/_latestVersion)
+You can download the latest release [here][62b1a911].
 
 ## Install ##
 - To install on Windows: copy the **dll files** to you VST plugins folder
@@ -54,3 +51,4 @@ You can download the latest build from BinTray:
   [0e888cf7]: https://www.juce.com "JUCE website"
   [7aae2e00]: https://dl.bintray.com/shaduzlabs/throb "download from BinTray"
   [dbaaa0fa]: https://brew.sh "Install brew"
+  [62b1a911]: https://github.com/shaduzlabs/throb/releases "Download the latest release"
